@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,9 +7,20 @@ import { LINKS, NAV_LINKS, SOCIALS } from "@/constants";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /iPhone|iPad|iPod|Android|Mobile|Tablet/i.test(navigator.userAgent);
+      setIsMobile(mobile);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
-    <div className="w-full h-[65px] fixed top-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001427] backdrop-blur-md z-50 px-10">
+    <div className="w-full h-[65px] fixed top-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001427] backdrop-blur-md z-50 px-4 md:px-10">
       {/* Navbar Container */}
       <div className="w-full h-full flex items-center justify-between m-auto px-[10px]">
         {/* Logo + Name */}
@@ -17,20 +28,26 @@ export const Navbar = () => {
           href="#about-me"
           className="flex items-center"
         >
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={70}
-            height={70}
-            draggable={false}
-            className="cursor-pointer w-auto h-auto"
-            priority
-            style={{
-              maxWidth: '100%',
-              height: 'auto',
-            }}
-          />
-          <div className="font-extrabold ml-[10px] text-white hover:text-[#8b5cf6] transition-colors whitespace-nowrap text-base md:text-xl">
+          {!isMobile && (
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={70}
+              height={70}
+              draggable={false}
+              className="cursor-pointer w-auto h-auto"
+              priority
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+              }}
+            />
+          )}
+          <div className={`font-extrabold text-white hover:text-[#8b5cf6] transition-colors whitespace-nowrap ${
+            isMobile 
+              ? 'text-lg ml-0' // No margin on mobile, smaller text
+              : 'text-base md:text-xl ml-[10px]'
+          }`}>
             Louay Kashkool
           </div>
         </Link>
@@ -76,7 +93,7 @@ export const Navbar = () => {
 
         {/* Hamburger Menu */}
         <button
-          className="md:hidden text-white focus:outline-none text-4xl"
+          className="md:hidden text-white focus:outline-none text-3xl"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           ☰
@@ -87,12 +104,12 @@ export const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="absolute top-[65px] left-0 w-full bg-[#030014] p-5 flex flex-col items-center text-gray-300 md:hidden z-40">
           {/* Links */}
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-4 w-full">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.title}
                 href={link.link}
-                className="cursor-pointer hover:text-[rgb(112,66,248)] transition text-center"
+                className="cursor-pointer hover:text-[rgb(112,66,248)] transition text-center w-full py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.title}
@@ -102,7 +119,7 @@ export const Navbar = () => {
               href={LINKS.sourceCode}
               target="_blank"
               rel="noreferrer noopener"
-              className="cursor-pointer hover:text-[rgb(112,66,248)] transition text-center"
+              className="cursor-pointer hover:text-[rgb(112,66,248)] transition text-center w-full py-2"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Source Code

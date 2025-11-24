@@ -288,16 +288,30 @@ export const PROJECTS = [
   {
     title: "Multi Vendor E-Commerce Website",
     description:
-      'A feature-rich multi-vendor e-commerce platform where an admin can manage multiple stores, approve vendors, and oversee platform operations. Each store owner can manage products, inventory, and pricing, while customers enjoy a seamless shopping experience with real-time order tracking, secure payments, and user-friendly navigation. Designed to handle complex workflows and scalable for large marketplaces.',
+      'A feature-rich multi-vendor e-commerce platform where an admin can manage multiple stores, approve vendors, and oversee platform operations. Each store owner can manage products, inventory, and pricing, while customers enjoy a seamless shopping experience with real-time order tracking, secure payments, and user-friendly navigation. Designed to handle complex workflows and scalable for large marketplaces. Note: This project is not yet published.',
     image: "/projects/project-2.png",
-    link: "https://example.com",
+    link: "",
   },
   {
     title: "Online bus booking for many Companies management system",
     description:
-      'A comprehensive online bus booking platform that enables customers to book tickets in real time across multiple bus operators, while providing companies with a robust management system for schedules, routes, pricing, and analytics. Designed for scalability, efficiency, and seamless user experience, this system empowers transport businesses to manage their operations with ease while giving travelers a convenient and reliable booking experience.',
+      'A comprehensive online bus booking platform that enables customers to book tickets in real time across multiple bus operators, while providing companies with a robust management system for schedules, routes, pricing, and analytics. Designed for scalability, efficiency, and seamless user experience, this system empowers transport businesses to manage their operations with ease while giving travelers a convenient and reliable booking experience. Note: This project is not yet published.',
     image: "/projects/project-3.png",
-    link: "https://example.com",
+    link: "",
+  },
+  {
+    title: "NIZAR JEWELLERY - Jewelry E-Commerce Platform",
+    description:
+      'A SaaS-ready jewelry e-commerce platform built with React and Node.js, designed for jewelry stores to showcase collections, manage inventory, and handle customer reservations. Features a customizable multi-client architecture for deploying to different jewelry businesses with brand-specific customization. Store owners manage products, materials pricing, certificates, reservations, and analytics via an intuitive dashboard, while customers get a bilingual (Arabic/English) shopping experience with browsing, wishlist, reservations, and certificate verification. Built with security, performance, and SEO optimization, including Google OAuth, email notifications, real-time analytics, and load testing capabilities.',
+    image: "/projects/project-4.png",
+    link: "https://nizarjewellery.com/",
+  },
+  {
+    title: "Stroke Communication App - Emergency Assistant (AI Powered TTS)",
+    description:
+      'A Progressive Web App (PWA) built with React 19 and Vite to help stroke patients communicate. Features offline-first storage with IndexedDB, so it works without internet. Includes emergency assistance with body part and symptom selection, contact management with images and relationships, a phrase library with text-to-speech, food preference tracking, and quick access to emergency numbers. Designed with Arabic (RTL) support, security monitoring, performance optimization, and a mobile-first interface. All data is stored locally for privacy, and the app can be installed on mobile devices for quick access during emergencies.',
+    image: "/projects/project-5.jpg",
+    link: "",
   },
 ] as const;
 

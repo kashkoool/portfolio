@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap");
+/* Cedarville Cursive font is loaded dynamically to avoid render-blocking */
+/* @import removed - loaded on demand via JavaScript */
 
 @tailwind base;
 @tailwind components;
@@ -65,4 +66,55 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animated elements */
+[class*="motion-"], 
+[data-framer-component] {
+  will-change: transform, opacity;
+}
+
+/* Optimize images */
+img {
+  content-visibility: auto;
+}
+
+/* Fade-in animation for lazy loaded sections */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Prevent layout shifts on mobile - ensure consistent navbar styling */
+@media (max-width: 768px) {
+  /* Reserve space for navbar logo area even when logo is hidden */
+  /* This prevents layout shift when logo conditionally renders */
+  nav a[href="#about-me"],
+  a[href="#about-me"] {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Ensure consistent font rendering */
+body {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }

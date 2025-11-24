@@ -8,6 +8,7 @@ import type { Points as PointsType } from "three";
 export const StarBackground = (props: PointsProps) => {
   const ref = useRef<PointsType | null>(null);
   const [sphere, setSphere] = useState<Float32Array | null>(null);
+  const frameCount = useRef(0);
 
   // Memoize mobile detection to avoid recalculation
   const isMobile = useMemo(() => {
@@ -15,9 +16,25 @@ export const StarBackground = (props: PointsProps) => {
     return /iPhone|iPad|iPod|Android|Mobile|Tablet/i.test(navigator.userAgent);
   }, []);
 
+  // Performance-based star count detection
+  const getStarCount = useMemo(() => {
+    if (isMobile) return 25;
+    
+    // Detect device performance
+    if (typeof navigator !== 'undefined' && 'hardwareConcurrency' in navigator) {
+      const cores = navigator.hardwareConcurrency || 4;
+      // Adjust based on CPU cores (more cores = more stars)
+      if (cores >= 8) return 600;
+      if (cores >= 4) return 550;
+      return 500;
+    }
+    // Default to 550 for desktop
+    return 550;
+  }, [isMobile]);
+
   // Memoize star generation to avoid recalculation
   const generateStars = useMemo(() => {
-    const numPoints = isMobile ? 25 : 1000; // Reduced from 5000 to 1000 for desktop
+    const numPoints = getStarCount;
     const positions = new Float32Array(numPoints * 3);
 
     for (let i = 0; i < numPoints * 3; i += 3) {
@@ -35,17 +52,21 @@ export const StarBackground = (props: PointsProps) => {
     }
 
     return positions;
-  }, [isMobile]);
+  }, [isMobile, getStarCount]);
 
   useEffect(() => {
     setSphere(generateStars);
   }, [generateStars]);
 
-  // Same rotation speed for both mobile and desktop
+  // Frame throttling: target 30fps instead of 60fps (skip every other frame)
   useFrame((_state, delta) => {
     if (ref.current && sphere) {
-      ref.current.rotation.x -= delta / 10;
-      ref.current.rotation.y -= delta / 15;
+      frameCount.current += 1;
+      // Only update every other frame (30fps instead of 60fps)
+      if (frameCount.current % 2 === 0) {
+        ref.current.rotation.x -= delta / 10;
+        ref.current.rotation.y -= delta / 15;
+      }
     }
   });
 

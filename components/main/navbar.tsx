@@ -28,26 +28,21 @@ export const Navbar = () => {
           href="#about-me"
           className="flex items-center"
         >
-          {!isMobile && (
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={70}
-              height={70}
-              draggable={false}
-              className="cursor-pointer w-auto h-auto"
-              priority
-              style={{
-                maxWidth: '100%',
-                height: 'auto',
-              }}
-            />
-          )}
-          <div className={`font-extrabold text-white hover:text-[#8b5cf6] transition-colors whitespace-nowrap ${
-            isMobile 
-              ? 'text-lg ml-0' // No margin on mobile, smaller text
-              : 'text-base md:text-xl ml-[10px]'
-          }`}>
+          {/* Use CSS to hide logo on mobile to prevent hydration mismatch */}
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={70}
+            height={70}
+            draggable={false}
+            className="cursor-pointer w-auto h-auto hidden md:block"
+            priority
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+            }}
+          />
+          <div className="font-extrabold text-white hover:text-[#8b5cf6] transition-colors whitespace-nowrap text-lg md:text-base md:text-xl ml-0 md:ml-[10px]">
             Louay Kashkool
           </div>
         </Link>

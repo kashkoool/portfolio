@@ -5,15 +5,23 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { slideInFromTop } from "@/lib/motion";
+import { loadCedarvilleFont } from "@/lib/load-font";
 
 export const Encryption = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  // Check mobile synchronously to prevent video from rendering on mobile
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return /iPhone|iPad|iPod|Android|Mobile|Tablet/i.test(navigator.userAgent);
+  });
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+      setIsMobile(/iPhone|iPad|iPod|Android|Mobile|Tablet/i.test(navigator.userAgent));
     };
     checkMobile();
+    
+    // Load Cedarville Cursive font dynamically when component mounts
+    loadCedarvilleFont();
   }, []);
 
   return (
@@ -23,20 +31,32 @@ export const Encryption = () => {
         : 'min-h-screen'
     }`}>
       <div className="absolute w-auto h-auto top-0 z-[5]">
-        <motion.div
-          variants={slideInFromTop}
-          className={`font-medium text-center text-gray-200 ${
-            isMobile 
-              ? 'text-2xl' // Smaller text for mobile
-              : 'text-[40px]'
-          }`}
-        >
-          Performance{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">
-            &
-          </span>{" "}
-          security.
-        </motion.div>
+        {isMobile ? (
+          // Mobile: Use CSS transitions instead of Framer Motion
+          <div
+            className={`font-medium text-center text-gray-200 text-2xl animate-fade-in`}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            Performance{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">
+              &
+            </span>{" "}
+            security.
+          </div>
+        ) : (
+          // Desktop: Use Framer Motion
+          <motion.div
+            variants={slideInFromTop}
+            className="font-medium text-center text-gray-200 text-[40px]"
+            style={{ willChange: 'transform, opacity' }}
+          >
+            Performance{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500">
+              &
+            </span>{" "}
+            security.
+          </motion.div>
+        )}
       </div>
 
       <div className={`flex flex-col items-center justify-center absolute z-[20] w-auto h-auto ${
@@ -92,22 +112,21 @@ export const Encryption = () => {
         </div>
       </div>
 
-      <div className="w-full flex items-start justify-center absolute">
-        <video
-          loop
-          muted
-          autoPlay
-          playsInline
-          preload="none"
-          className={`w-full opacity-50 ${
-            isMobile 
-              ? 'h-[120px] object-cover' // Fixed height for mobile
-              : 'h-auto'
-          }`}
-        >
-          <source src="/videos/encryption-bg.webm" type="video/webm" />
-        </video>
-      </div>
+      {/* Video completely disabled on mobile to save ~2.4MB */}
+      {!isMobile && (
+        <div className="w-full flex items-start justify-center absolute">
+          <video
+            loop
+            muted
+            autoPlay
+            playsInline
+            preload="none"
+            className="w-full h-auto opacity-50"
+          >
+            <source src="/videos/encryption-bg.webm" type="video/webm" />
+          </video>
+        </div>
+      )}
     </div>
   );
 };

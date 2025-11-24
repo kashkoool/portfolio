@@ -49,10 +49,44 @@ export const SkillDataProvider = ({
     },
   }), [index]);
 
-  // Optimize image dimensions for mobile
-  const optimizedWidth = isMobile ? Math.min(width, 60) : width;
-  const optimizedHeight = isMobile ? Math.min(height, 60) : height;
+  // Optimize image dimensions for mobile - reduced from 60px to 48px
+  const optimizedWidth = isMobile ? Math.min(width, 48) : width;
+  const optimizedHeight = isMobile ? Math.min(height, 48) : height;
 
+  // Use CSS transitions on mobile instead of Framer Motion for better performance
+  if (isMobile) {
+    return (
+      <div
+        ref={ref}
+        className={`inline-flex items-center justify-center transition-all duration-300 ease-out ${
+          inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}
+        style={{ 
+          willChange: 'transform, opacity',
+          transitionDelay: `${Math.min(index * 20, 200)}ms`
+        }}
+      >
+        <Image
+          src={`/skills/${src}`}
+          width={optimizedWidth}
+          height={optimizedHeight}
+          alt={name}
+          className="object-contain w-auto h-auto"
+          style={{
+            maxWidth: '100%',
+            height: 'auto',
+          }}
+          loading="lazy" // All images lazy on mobile
+          priority={false} // No priority on mobile
+          fetchPriority="low" // Low priority for all images on mobile
+          decoding="async"
+          sizes="48px" // Optimized for mobile
+        />
+      </div>
+    );
+  }
+
+  // Desktop: Use Framer Motion
   return (
     <motion.div
       ref={ref}
@@ -60,6 +94,7 @@ export const SkillDataProvider = ({
       animate={inView ? "visible" : "hidden"}
       variants={imageVariants}
       className="inline-flex items-center justify-center"
+      style={{ willChange: 'transform, opacity' }}
     >
       <Image
         src={`/skills/${src}`}
@@ -71,9 +106,11 @@ export const SkillDataProvider = ({
           maxWidth: '100%',
           height: 'auto',
         }}
-        loading={index > 2 ? 'lazy' : 'eager'} // Only first 3 images eager load
-        priority={index < 3} // Prioritize first few images
-        sizes={isMobile ? "60px" : "80px"} // Optimize for mobile
+        loading={index > 2 ? 'lazy' : 'eager'}
+        priority={index < 3}
+        fetchPriority={index < 3 ? 'high' : 'low'}
+        decoding="async"
+        sizes="80px"
       />
     </motion.div>
   );

@@ -46,7 +46,7 @@ export const Hero = () => {
           autoPlay
           muted
           loop
-          preload="metadata" // Only load metadata initially
+          preload="none" // Load on demand for better performance
           className={videoClasses}
           playsInline
           onLoadedData={() => setVideoLoaded(true)}
@@ -54,6 +54,7 @@ export const Hero = () => {
           <source src="/videos/blackhole.webm" type="video/webm" />
         </video>
       )}
+      {/* HeroContent loads immediately to avoid CLS */}
       {isMobile ? (
         <>
           <div style={{ height: 10 }} /> {/* Better spacing for mobile */}
